@@ -16,7 +16,40 @@ function App() {
     return newDice;
   }
 
+  let [tenzies, setTenzies] = React.useState(false);
+
   const [diceNum, setDiceNum] = React.useState(allNewDice());
+
+  React.useEffect(() => {
+    let heldDies = diceNum.filter((item) => {
+      if (item.isHeld === true) {
+        return item;
+      }
+    });
+
+    function sameNums() {
+      let someArr = diceNum.map((item) => item.value);
+      for (let i = 0; i < someArr.length; i++) {
+        if (someArr[0] === someArr[i]) {
+          continue;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (heldDies.length === 10 && sameNums()) {
+      setTenzies(true);
+      console.log("won");
+    }
+  }, [diceNum]);
+
+  /* React.useEffect(() => {
+  if (tenzies === true) {
+    setTenzies(false)
+    setDiceNum(allNewDice())
+  }
+}, [tenzies]) */
 
   function holdDice(id) {
     setDiceNum((prevState) => {
@@ -38,17 +71,22 @@ function App() {
   });
 
   function roll() {
-    setDiceNum((prevState) => {
-      return prevState.map((item) =>
-        item.isHeld
-          ? item
-          : {
-              value: Math.ceil(Math.random() * 6),
-              isHeld: false,
-              id: nanoid(),
-            }
-      );
-    });
+    if (tenzies === false) {
+      setDiceNum((prevState) => {
+        return prevState.map((item) =>
+          item.isHeld
+            ? item
+            : {
+                value: Math.ceil(Math.random() * 6),
+                isHeld: false,
+                id: nanoid(),
+              }
+        );
+      });
+    } else {
+      setTenzies(false)
+      setDiceNum(allNewDice())
+    }
   }
 
   return (
@@ -61,7 +99,7 @@ function App() {
         </p>
         <div className="dice-container">{die}</div>
         <button className="roll-dice" onClick={roll}>
-          Roll
+          {tenzies ? "New Game" : "Roll"}
         </button>
       </div>
     </main>
