@@ -1,6 +1,7 @@
 import React from "react";
 import Die from "./Die";
 import { nanoid } from "nanoid";
+import Confetti from "react-confetti";
 
 function App() {
   function allNewDice() {
@@ -44,13 +45,6 @@ function App() {
     }
   }, [diceNum]);
 
-  /* React.useEffect(() => {
-  if (tenzies === true) {
-    setTenzies(false)
-    setDiceNum(allNewDice())
-  }
-}, [tenzies]) */
-
   function holdDice(id) {
     setDiceNum((prevState) => {
       return prevState.map((item) =>
@@ -84,13 +78,14 @@ function App() {
         );
       });
     } else {
-      setTenzies(false)
-      setDiceNum(allNewDice())
+      setTenzies(false);
+      setDiceNum(allNewDice());
     }
   }
 
   return (
     <main>
+      {tenzies === true ? <Confetti /> : false}
       <div className="box">
         <h1 className="title">Tenzies</h1>
         <p className="instructions">
